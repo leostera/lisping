@@ -62,6 +62,13 @@
   (setf *repertoire* (mapcar 
                #'(lambda (row) 
                    (when (funcall selector-fn row)
+                    ; if I try to use &rest params
+                    ; then it only updates the first result?
+                    ; assuming fields comes from:
+                    ;      (defun update (selector-fn &rest fields)
+                    ; this code should work?
+                     ;(loop while fields
+                           ;collecting (setf (getf row (pop fields)) (pop fields))) 
                      (if song (setf (getf row :song) song))
                      (if artist (setf (getf row :artist) artist))
                      (if rating (setf (getf row :rating) rating))
