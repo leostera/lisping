@@ -62,3 +62,6 @@
                      (if rating (setf (getf row :rating) rating))
                      (if learned-p (setf (getf row :learned) learned)))
                    row) *repertoire*)))
+
+(defun delete-rows (selector-fn)
+  (setf *repertoire* (remove-if selector-fn *repertoire*)))
