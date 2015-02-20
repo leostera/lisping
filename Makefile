@@ -1,0 +1,2 @@
+all:
+	rm *.fas *.lib
