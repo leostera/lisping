@@ -62,18 +62,29 @@
   (loop (add-song (prompt-song))
         (if (not (y-or-n-p "Add another one? [y/n]: ")) (return))))
 
+; awesome sauce, now we can add multiple songs to our repertoire...
+; ...our days to rockstardom are counted!
+
+; but wouldn't it be neat if we could just save this thing
+; like just in case we cloesd the interpreter and lost all our shit
+; (like happened a few seconds ago)
 (defun save-db (filename)
   (with-open-file (out filename
                    :direction :output
                    :if-exists :supersede)
+    ; with-standard-io-syntax seems to be some sort of 
+    ; macro construct that's happening inside of
+    ; with-open-file, or thanks to it
     (with-standard-io-syntax 
       (print *repertoire* out))))
 
+; and with each saving comes a loading
 (defun load-db (filename)
   (with-open-file (in filename)
     (with-standard-io-syntax 
       (setf *repertoire* (read in)))))
 
+; i got bored of writing comments
 (defun select (where)
   (remove-if-not where *repertoire*))
 
@@ -85,3 +96,5 @@
         (if rating  (string-equal (getf song :rating) rating) t)
         (if learned-p  (string-equal (getf song :learned) learned) t)
         )))
+
+
