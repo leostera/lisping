@@ -51,5 +51,14 @@
         (if name  (string-equal (getf song :name) name) t)
         (if artist  (string-equal (getf song :artist) artist) t)
         (if rating  (string-equal (getf song :rating) rating) t)
-        (if learned-p  (string-equal (getf song :learned) learned) t)
-        )))
+        (if learned-p  (string-equal (getf song :learned) learned) t))))
+
+(defun update (selector-fn &key song artist rating (learned nil learned-p)) 
+  (setf *repertoire* (mapcar 
+               #'(lambda (row) 
+                   (when (funcall selector-fn row)
+                     (if song (setf (getf row :song) song))
+                     (if artist (setf (getf row :artist) artist))
+                     (if rating (setf (getf row :rating) rating))
+                     (if learned-p (setf (getf row :learned) learned)))
+                   row) *repertoire*)))
