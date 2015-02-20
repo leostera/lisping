@@ -45,13 +45,18 @@
 (defun select (where)
   (remove-if-not where *repertoire*))
 
-(defun where (&key artist name rating (learned nil learned-p))
-  #'(lambda (song)
-      (and
-        (if name  (string-equal (getf song :name) name) t)
-        (if artist  (string-equal (getf song :artist) artist) t)
-        (if rating  (string-equal (getf song :rating) rating) t)
-        (if learned-p  (string-equal (getf song :learned) learned) t))))
+(defun make-comparison-expr (field value)
+  (list 'equal (list 'getf 'cd field) value))
+
+(defun make-comparison-expr (field value)
+  `(equal (getf cd ,field) ,value))
+
+(defun make-comparison-list (fields) 
+  (loop while fields 
+        collecting (make-comparison-expr (pop fields) (pop fields))))
+
+(defmacro where (&rest clauses)
+  `#'(lambda (song) (and ,@(make-comparison-list clauses))))
 
 (defun update (selector-fn &key song artist rating (learned nil learned-p)) 
   (setf *repertoire* (mapcar 
